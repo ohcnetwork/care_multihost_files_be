@@ -45,10 +45,6 @@ class HostTests(unittest.TestCase):
         )
         self.assertEqual(host.current(), "care.local")
 
-    def test_asgi_scope(self):
-        request_started.send(sender=None, scope={"headers": [(b"host", b"clinic.tail1234.ts.net:8443")]})
-        self.assertEqual(host.current(), "clinic.tail1234.ts.net:8443")
-
     def test_rehost_only_rewrites_storage_behind_allowed_hosts(self):
         signed = "https://care.local/patient-bucket/PATIENT/a.pdf?X-Amz-Signature=abc"
         self.assertEqual(host.rehost(signed), signed)

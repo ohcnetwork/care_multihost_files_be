@@ -31,18 +31,8 @@ def host_from_environ(environ: dict) -> str:
     return _first(environ.get("HTTP_X_FORWARDED_HOST")) or _first(environ.get("HTTP_HOST"))
 
 
-def host_from_scope(scope: dict) -> str:
-    headers = {key.decode("latin1").lower(): value.decode("latin1") for key, value in scope.get("headers") or []}
-    return _first(headers.get("x-forwarded-host")) or _first(headers.get("host"))
-
-
-def _started(sender, environ=None, scope=None, **kwargs):
-    if environ is not None:
-        netloc = host_from_environ(environ)
-    elif scope is not None:
-        netloc = host_from_scope(scope)
-    else:
-        netloc = ""
+def _started(sender, environ=None, **kwargs):
+    netloc = host_from_environ(environ or {})
     _current.set(netloc.lower() if netloc and is_allowed(netloc) else None)
 
 
