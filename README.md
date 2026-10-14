@@ -59,8 +59,8 @@ Add it to `ADDITIONAL_PLUGS` and rebuild the backend image:
 ```json
 [
   {
-    "name": "care_multihost_files",
-    "package_name": "git+https://github.com/praffq/care_multihost_files.git",
+    "name": "care_multihost_files_be",
+    "package_name": "git+https://github.com/ohcnetwork/care_multihost_files_be.git",
     "version": "@main",
     "configs": {"ALLOWED_HOSTS": ["*.local", "*.ts.net"]}
   }

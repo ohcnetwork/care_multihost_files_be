@@ -3,7 +3,7 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "care_multihost_files"
+name = "care_multihost_files_be"
 version = "0.1.0"
 description = "CARE backend plugin that signs file links for the address each request came in on, so files work when one CARE is reached under several addresses."
 readme = "README.md"
@@ -26,8 +26,8 @@ test = [
 ]
 
 [project.urls]
-bugs = "https://github.com/praffq/care_multihost_files/issues"
-homepage = "https://github.com/praffq/care_multihost_files"
+bugs = "https://github.com/ohcnetwork/care_multihost_files_be/issues"
+homepage = "https://github.com/ohcnetwork/care_multihost_files_be"
 
 [tool.setuptools.packages.find]
 where = ["src"]

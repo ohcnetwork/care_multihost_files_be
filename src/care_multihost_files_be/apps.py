@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
-PLUGIN_NAME = "care_multihost_files"
+PLUGIN_NAME = "care_multihost_files_be"
 
 
 class CareMultihostFilesConfig(AppConfig):
@@ -8,6 +8,6 @@ class CareMultihostFilesConfig(AppConfig):
     verbose_name = "CARE multihost files"
 
     def ready(self):
-        from care_multihost_files import multihost
+        from care_multihost_files_be import multihost
 
         multihost.setup()

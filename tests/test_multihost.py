@@ -2,7 +2,7 @@ import unittest
 
 from django.core.signals import request_finished, request_started
 
-from care_multihost_files import multihost
+from care_multihost_files_be import multihost
 
 SIGNED = "https://care.local/patient-bucket/PATIENT/a.pdf?X-Amz-Signature=abc"
 HOME = "clinic.tail1234.ts.net:8443"
@@ -10,8 +10,8 @@ HOME = "clinic.tail1234.ts.net:8443"
 
 class MultihostTests(unittest.TestCase):
     def setUp(self):
-        request_started.connect(multihost.started, dispatch_uid="care_multihost_files_started")
-        request_finished.connect(multihost.finished, dispatch_uid="care_multihost_files_finished")
+        request_started.connect(multihost.started, dispatch_uid="care_multihost_files_be_started")
+        request_finished.connect(multihost.finished, dispatch_uid="care_multihost_files_be_finished")
         self.addCleanup(request_finished.send, sender=None)
 
     def test_allowed_ignores_port_and_case(self):

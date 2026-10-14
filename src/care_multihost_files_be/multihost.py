@@ -6,9 +6,9 @@ from django.apps import apps
 from django.conf import settings
 from django.core.signals import request_finished, request_started
 
-from care_multihost_files.apps import PLUGIN_NAME
+from care_multihost_files_be.apps import PLUGIN_NAME
 
-_host = ContextVar("care_multihost_files_host", default=None)
+_host = ContextVar("care_multihost_files_be_host", default=None)
 
 
 def allowed(host):
@@ -51,8 +51,8 @@ def wrap_url(original):
 
 
 def setup():
-    request_started.connect(started, dispatch_uid="care_multihost_files_started")
-    request_finished.connect(finished, dispatch_uid="care_multihost_files_finished")
+    request_started.connect(started, dispatch_uid="care_multihost_files_be_started")
+    request_finished.connect(finished, dispatch_uid="care_multihost_files_be_finished")
 
     from care.utils.csp import config
 
