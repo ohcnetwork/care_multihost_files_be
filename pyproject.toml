@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "care_multihost_files"
+version = "0.1.0"
+description = "CARE backend plugin that signs file links for the address each request came in on, so files work when one CARE is reached under several addresses."
+readme = "README.md"
+authors = [
+  {name = "Open Health Care Network", email = "support@ohc.network"}
+]
+maintainers = [
+  {name = "Open Health Care Network", email = "support@ohc.network"}
+]
+license = {text = "MIT"}
+dependencies = [
+    "django",
+    "django-environ",
+]
+requires-python = ">= 3.10"
+
+[project.optional-dependencies]
+test = [
+    "ruff",
+]
+
+[project.urls]
+bugs = "https://github.com/praffq/care_multihost_files/issues"
+homepage = "https://github.com/praffq/care_multihost_files"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP"]
