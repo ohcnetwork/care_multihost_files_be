@@ -17,42 +17,40 @@ so the link cannot simply be rewritten after it is made.
 
 ## What the plugin does
 
-1. When a request starts, it notes the address the request came in on
-   (`X-Forwarded-Host`, otherwise `Host`), if that address is on the allowed list.
-2. While that request runs, CARE's file links are built and signed for that
-   address instead of the fixed one:
+1. When a request starts (`request_started`), it reads the address the request
+   came in on (`Host`). If that address is on the allowed list, it remembers it
+   for this request.
+2. While the request runs, CARE's file links use that address instead of the
+   fixed one:
    - signed download and upload links (`get_facility_bucket_config`,
      `get_patient_bucket_config` and `get_report_bucket_config` with `external=True`);
    - facility cover images (`Facility.read_cover_image_url`);
    - user profile pictures (`User.read_profile_picture_url`).
-3. Everything else keeps today's behaviour: requests from addresses not on the
-   list, work without a request (Celery tasks), internal storage access, and
-   storage that is not served behind an allowed address, such as Amazon S3 or a CDN.
+3. When the request ends (`request_finished`), it forgets the address.
 
-No CARE source file changes. The plugin wraps those functions when Django starts.
+Requests from addresses not on the list, and work without a request (Celery
+tasks), keep today's links. Internal storage access (`external=False`) is never
+changed. No CARE source file changes: the plugin wraps those functions when
+Django starts.
 
 ## When you need it
 
-- File storage (MinIO, Silo or similar) is served behind the same address as CARE,
-  through a reverse proxy, and
+- File storage (MinIO, Silo or similar) is served behind the same address as
+  CARE, through a reverse proxy, and
 - CARE is reached under more than one address: LAN and VPN, an internal and a
   public domain, an old and a new domain, and so on.
 
-You do not need it when files are served from a cloud provider's own address,
-or when CARE has only one address.
+Do not install it when files are stored with a cloud provider such as Amazon S3
+or behind a CDN: it would point those links at CARE's address.
 
 ## Configuration
 
 | Setting | Meaning | Example |
 | --- | --- | --- |
-| `ALLOWED_HOSTS` | Address patterns that file links may use. Matched against the host name without its port, case-insensitively, with `*` wildcards. Empty means the plugin changes nothing. | `["*.local", "*.ts.net"]` |
+| `ALLOWED_HOSTS` | Address patterns a request may come in on. Matched against the host name without its port, case-insensitively, with `*` wildcards. Empty means the plugin changes nothing. | `["*.local", "*.ts.net"]` |
 
-Set it in the plugin's `configs`, or with the environment variable
-`MULTIHOST_FILES_ALLOWED_HOSTS` (comma-separated or a JSON list).
-
-Both the address a request comes in on and the address of the configured file
-storage must match the list for a link to change. A forged `Host` header for an
-address outside the list therefore never changes a link.
+Set it in the plugin's `configs`. A forged `Host` header for an address outside
+the list never changes a link.
 
 ## Installing
 
@@ -82,5 +80,5 @@ python -m unittest discover -s tests -t .
 ```
 
 The wrapped functions are internal to CARE. If CARE renames or reshapes them,
-the plugin logs a warning at startup and those links keep their usual address.
-Run the tests against each CARE version you deploy.
+the backend fails to start with an error naming the missing function. Check
+each CARE version you deploy.

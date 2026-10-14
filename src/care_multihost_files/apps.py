@@ -8,7 +8,6 @@ class CareMultihostFilesConfig(AppConfig):
     verbose_name = "CARE multihost files"
 
     def ready(self):
-        from care_multihost_files import host, patches
+        from care_multihost_files import multihost
 
-        host.connect()
-        patches.install()
+        multihost.setup()
