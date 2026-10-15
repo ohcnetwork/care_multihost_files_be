@@ -27,6 +27,15 @@ class MultihostTests(unittest.TestCase):
         request_started.send(sender=None, environ={"HTTP_HOST": "evil.example.com"})
         self.assertEqual(multihost.rehost(SIGNED), SIGNED)
 
+    def test_links_to_other_storage_are_left_alone(self):
+        request_started.send(sender=None, environ={"HTTP_HOST": HOME})
+        for url in (
+            "https://bucket.s3.amazonaws.com/PATIENT/a.pdf?X-Amz-Signature=abc",
+            "https://cdn.example.org/cover.png",
+            "/relative/path",
+        ):
+            self.assertEqual(multihost.rehost(url), url)
+
     def test_wrap_config_changes_only_external_endpoints(self):
         def config(external):
             return {"endpoint_url": "https://care.local" if external else "http://minio:9000"}, "patient-bucket"

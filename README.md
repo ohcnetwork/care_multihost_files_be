@@ -40,8 +40,8 @@ Django starts.
 - CARE is reached under more than one address: LAN and VPN, an internal and a
   public domain, an old and a new domain, and so on.
 
-Do not install it when files are stored with a cloud provider such as Amazon S3
-or behind a CDN: it would point those links at CARE's address.
+Links that point anywhere else, such as Amazon S3 or a CDN, are left alone:
+a link changes only when its own address also matches the allowed list.
 
 ## Configuration
 
@@ -49,8 +49,10 @@ or behind a CDN: it would point those links at CARE's address.
 | --- | --- | --- |
 | `ALLOWED_HOSTS` | Address patterns a request may come in on. Matched against the host name without its port, case-insensitively, with `*` wildcards. Empty means the plugin changes nothing. | `["*.local", "*.ts.net"]` |
 
-Set it in the plugin's `configs`. A forged `Host` header for an address outside
-the list never changes a link.
+Set it in the plugin's `configs`. Both the address a request came in on and the
+link's own address must match the list for a link to change, so a forged `Host`
+header for an address outside the list never changes a link, and storage on
+another address is never pointed at CARE.
 
 ## Installing
 

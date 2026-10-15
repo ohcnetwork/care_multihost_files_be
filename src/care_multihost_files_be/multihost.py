@@ -30,7 +30,10 @@ def rehost(url):
     host = _host.get()
     if not url or not host:
         return url
-    return urlsplit(url)._replace(netloc=host).geturl()
+    parts = urlsplit(url)
+    if not allowed(parts.netloc):
+        return url
+    return parts._replace(netloc=host).geturl()
 
 
 def wrap_config(original):
